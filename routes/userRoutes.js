@@ -48,11 +48,22 @@ user_route.get('/dashboard', auth.isLogin, userController.loadDashboard);
 
 user_route.post('/save-chat', userController.saveChat);
 
-user_route.get('*', function (req, res) {
+user_route.get("/get-chat", userController.getAllChat);
 
-    res.redirect('/');
+user_route.get('/get', userController.getChatById); 
+
+// user_route.get('*', function (req, res) {
+
+//     res.redirect('/');
     
-})
+// })
+
+
+
+user_route.post("/login", userController.loginApi);
+
+user_route.get("/alluser", userController.getAllUser);
+
 
 
 module.exports = user_route;

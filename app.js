@@ -2,8 +2,22 @@ require('dotenv').config();
 
 var mongoose = require('mongoose');
 
-mongoose.connect("mongodb+srv://mohitglobal67:mohit@sbs.jjk73yj.mongodb.net/test");
 
+
+//mongoose.connect("mongodb+srv://mohitglobal67:mohit@sbs.jjk73yj.mongodb.net/test");
+
+mongoose.set('strictQuery', true);
+
+mongoose.connect(process.env.MONGO_URL, {   useNewUrlParser: true,
+  useUnifiedTopology: true, },);
+
+mongoose.connection.on('err', err => {
+    console.log("connection failed");
+});
+
+mongoose.connection.on('connected', connected => {
+    console.log("connection Success ");
+})
 
 const app = require('express')();
 
@@ -27,23 +41,31 @@ var usp = io.of('/user-namespace');
 
 usp.on('connection',async function (socket) {
 
-    var userId = socket.handshake.auth.token;
-    await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '1' } });
+    const userId = socket.handshake.auth.token;
+
+      const username1 = socket.handshake.query.auth
+    
+     console.log(userId);
+     console.log(username1);
+
+    
+    await User.findByIdAndUpdate({ _id: userId || username1 }, { $set: { is_online: '1' } });
 
 
     //show online user broadcast
-    socket.broadcast.emit('getOnlineUser', {user_id:userId})
+    socket.broadcast.emit('getOnlineUser', {user_id:userId || username1})
 
         console.log("user connected");
 
 
     socket.on('disconnect',async function () {
 
-            var userId = socket.handshake.auth.token;
-        await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '0' } });
+        var userId = socket.handshake.auth.token;
+        const username1 = socket.handshake.query.auth
+        await User.findByIdAndUpdate({ _id: userId || username1}, { $set: { is_online: '0' } });
 
             //show offline user broadcast
-    socket.broadcast.emit('getOfflineUser', {user_id:userId})
+       socket.broadcast.emit('getOfflineUser', {user_id:userId || username1})
         
         console.log("user disconnected");
         
@@ -52,9 +74,10 @@ usp.on('connection',async function (socket) {
     //chat implemation
     socket.on('newChat', function (data) {
 
-        socket.broadcast.emit('loadNewChat', data);
         
-    
+
+        socket.broadcast.emit('loadNewChat', data);
+            
     });
 
 

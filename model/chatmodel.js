@@ -7,6 +7,7 @@ const chatSchema = mongoose.Schema({
     sender_id: {
         type: mongoose.Schema.Types.ObjectId,
         
+        
         ref:"User"
     },
 
@@ -19,9 +20,22 @@ const chatSchema = mongoose.Schema({
     message: {
         type: String,
         required: true
-     }
+    },
+    timestamp: { type: String, default: getCurrentTime }
+
+    
  
-}, { timestamp: true });
+},
+
+
+);
+
+function getCurrentTime() {
+  const now = new Date();
+  const options = { hour: 'numeric', minute: '2-digit', hour12: true };
+  return now.toLocaleTimeString('en-US', options);
+}
+
 
 
 module.exports = mongoose.model('Chat',chatSchema )

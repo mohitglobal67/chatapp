@@ -99,7 +99,7 @@
     })
 
 
-    //update user onlene status
+    //update user online status
     socket.on('getOnlineUser',function(data){
 
         $('#'+data.user_id+'-status').text('Online')
@@ -109,14 +109,11 @@
 
     })
 
-
     //update user offline status
         socket.on('getOfflineUser', function (data) {
-
             $('#' + data.user_id + '-status').text('Offline')
             $('#' + data.user_id + '-status').addClass('offline-status')
             $('#' + data.user_id + '-status').removeClass('online-status')
-
 
         });
 
@@ -169,10 +166,7 @@
                                         </div>
                         `;
                 $('#chat-container').append(html);
-                
-
             }
-
              scrollchat();
 
         });
