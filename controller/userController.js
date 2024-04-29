@@ -32,7 +32,6 @@ res.render('register', { message: 'Your Registration has beend Completed!' })
 }
 
 
-
 const loginLoad = async (req, res)=>{
     try {
         res.render('login')
@@ -51,7 +50,10 @@ const password = req.body.password;
 const userData = await User.findOne({ email: email });
         if (userData) {
     
-            const passwordMatch =await bcrypt.compare (password, userData.password);
+            const passwordMatch = await bcrypt.compareSync(password, userData.password);
+
+
+            console.log(passwordMatch);
     if (passwordMatch){
         req.session.user = userData;
         
@@ -69,6 +71,7 @@ res.render('login',{message:"Email and password is incorrect"});
         console.log(error);
     }
 }
+
 
 
 const logout = async (req, res)=>{

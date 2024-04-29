@@ -25,10 +25,7 @@ const chatSchema = mongoose.Schema({
 
     
  
-},
-
-
-);
+},);
 
 function getCurrentTime() {
   const now = new Date();
